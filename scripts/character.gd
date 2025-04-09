@@ -1,8 +1,9 @@
 extends CharacterBody2D
 
 
-@export var SPEED: int = 200.0
-
+@export var SPEED: float = 200.0
+@export var marginX: int = 8
+@export var marginY: int = 16
 
 func _physics_process(delta: float) -> void:
 	var input_vector := Vector2(
@@ -39,5 +40,5 @@ func clamp_to_visible_area():
 	var bottom_edge = camera_position.y + screen_size.y/2 - sprite_size.y/2
 	
 	# Clamp the character position
-	global_position.x = clamp(global_position.x, left_edge, right_edge)
-	global_position.y = clamp(global_position.y, top_edge, bottom_edge)
+	global_position.x = clamp(global_position.x, left_edge + marginX, right_edge - marginX)
+	global_position.y = clamp(global_position.y, top_edge + marginY, bottom_edge - marginY)
