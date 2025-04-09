@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=3 uid="uid://cxby63nwwbyqa"]
+
+[ext_resource type="Texture2D" uid="uid://dj65vaom1bwec" path="res://assets/sprites/character/hero_idle+hit.png" id="1_slv8b"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_he33d"]
+atlas = ExtResource("1_slv8b")
+region = Rect2(96, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_534f4"]
+atlas = ExtResource("1_slv8b")
+region = Rect2(64, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_37blv"]
+atlas = ExtResource("1_slv8b")
+region = Rect2(32, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_su1va"]
+atlas = ExtResource("1_slv8b")
+region = Rect2(0, 0, 32, 16)
+
+[node name="Orbs" type="Node2D"]
+
+[node name="ThreeOrbsSprite" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_he33d")
+
+[node name="ShootingOrigin3" type="Marker2D" parent="ThreeOrbsSprite"]
+position = Vector2(6, 5)
+
+[node name="TwoOrbsSprite" type="Sprite2D" parent="."]
+visible = false
+texture = SubResource("AtlasTexture_534f4")
+
+[node name="ShootingOrigin2" type="Marker2D" parent="TwoOrbsSprite"]
+visible = false
+position = Vector2(-1, 0)
+
+[node name="OneOrbSprite" type="Sprite2D" parent="."]
+visible = false
+texture = SubResource("AtlasTexture_37blv")
+
+[node name="ShootingOrigin1" type="Marker2D" parent="OneOrbSprite"]
+visible = false
+position = Vector2(-8, 5)
+
+[node name="NoOrbsSprite" type="Sprite2D" parent="."]
+visible = false
+texture = SubResource("AtlasTexture_su1va")
