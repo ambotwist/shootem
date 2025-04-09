@@ -5,7 +5,20 @@ extends CharacterBody2D
 @export var marginX: int = 8
 @export var marginY: int = 16
 
+@onready var attack_pivot: = $AttackPivot
+@onready var laser = $AttackPivot/Laser
+
+
+func _process(delta: float):
+	if Input.is_action_just_pressed("fire"):
+		laser.activate()
+	if Input.is_action_just_released("fire"):
+		laser.deactivate()
+
+
 func _physics_process(delta: float) -> void:
+
+	# Movement
 	var input_vector := Vector2(
 		Input.get_axis("move_left", "move_right"),
 		Input.get_axis("move_up", "move_down")
@@ -20,6 +33,10 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	clamp_to_visible_area()
+
+	# Attack Pivot
+	attack_pivot.look_at(get_global_mouse_position())
+
 
 func clamp_to_visible_area():
 	var camera = get_viewport().get_camera_2d()

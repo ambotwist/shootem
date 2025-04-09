@@ -1,39 +1,40 @@
-[gd_scene load_steps=14 format=3 uid="uid://bbby28m4631k7"]
+[gd_scene load_steps=17 format=3 uid="uid://bbby28m4631k7"]
 
 [ext_resource type="Script" uid="uid://bp3bi8ilkpq8s" path="res://scripts/hoodeye.gd" id="1_af3js"]
 [ext_resource type="Texture2D" uid="uid://rlu3x2apboq" path="res://assets/sprites/ennemies/bestiary01.png" id="1_h1swc"]
+[ext_resource type="Texture2D" uid="uid://xjo5gwgkgt6b" path="res://assets/sprites/character/hero+bestiary01.png" id="2_8ijec"]
 [ext_resource type="PackedScene" uid="uid://dcu0ghw3pdml5" path="res://scenes/killzone.tscn" id="3_615go"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_af3js"]
-atlas = ExtResource("1_h1swc")
+[sub_resource type="AtlasTexture" id="AtlasTexture_cxdo1"]
+atlas = ExtResource("2_8ijec")
 region = Rect2(0, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_615go"]
-atlas = ExtResource("1_h1swc")
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ss4l"]
+atlas = ExtResource("2_8ijec")
 region = Rect2(32, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_8ijec"]
-atlas = ExtResource("1_h1swc")
+[sub_resource type="AtlasTexture" id="AtlasTexture_pwiup"]
+atlas = ExtResource("2_8ijec")
 region = Rect2(64, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_cxdo1"]
-atlas = ExtResource("1_h1swc")
+[sub_resource type="AtlasTexture" id="AtlasTexture_2135r"]
+atlas = ExtResource("2_8ijec")
 region = Rect2(96, 0, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_3ss4l"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_af3js")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_615go")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8ijec")
-}, {
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_cxdo1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ss4l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pwiup")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2135r")
 }],
 "loop": true,
 "name": &"default",
@@ -123,8 +124,17 @@ animations = [{
 "speed": 6.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_615go"]
-radius = 12.0
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_615go"]
+radius = 11.0
+height = 22.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8ijec"]
+radius = 5.0
+height = 20.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cxdo1"]
+radius = 2.21666
+height = 10.5764
 
 [node name="Hoodeye" type="Node2D"]
 script = ExtResource("1_af3js")
@@ -143,5 +153,20 @@ frame_progress = 0.811727
 [node name="Killzone" parent="." instance=ExtResource("3_615go")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
-position = Vector2(0, -2)
-shape = SubResource("CircleShape2D_615go")
+position = Vector2(0, -3)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_615go")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(0, 2)
+shape = SubResource("CapsuleShape2D_8ijec")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(-8, 5)
+rotation = 0.975302
+shape = SubResource("CapsuleShape2D_cxdo1")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(5, 5)
+rotation = -0.879454
+shape = SubResource("CapsuleShape2D_cxdo1")
