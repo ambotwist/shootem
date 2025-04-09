@@ -4,6 +4,8 @@ extends Node2D
 @export var collision_mask: int = 1  # Set to match the collision layer of objects to detect
 
 @onready var beam: Line2D = $Beam
+@onready var glow: Line2D = $Glow
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 var _is_active: bool
 
@@ -16,6 +18,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if _is_active:
 		update_beam()
+
 
 func update_beam() -> void:
 	# Get mouse position in world coordinates
@@ -49,13 +52,19 @@ func update_beam() -> void:
 
 func _set_length(length: float) -> void:
 	beam.points[1].x = length
-
+	glow.points[1].x = length
+	
 func activate():
 	if !_is_active:
 		_is_active = true
 		visible = true
+		animation_player.play("start_beam")
 
 func deactivate():
 	if _is_active:
 		_is_active = false
+		animation_player.play("stop_beam")
+
+func _on_animation_player_animation_finished(anim_name:StringName) -> void:
+	if anim_name == "stop_beam":
 		visible = false
