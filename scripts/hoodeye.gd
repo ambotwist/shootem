@@ -11,9 +11,12 @@ var _hurt: float = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	# Make sure sprite has the material
-	if sprites && sprites.material:
-		sprites.material.set_shader_parameter("brightness", 0.0)
+	# Make sure sprite has the material and ensure it's unique to this instance
+	if sprites:
+		if sprites.material:
+			# Create a unique duplicate of the shader material
+			sprites.material = sprites.material.duplicate()
+			sprites.material.set_shader_parameter("brightness", 0.0)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

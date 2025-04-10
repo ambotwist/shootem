@@ -20,6 +20,11 @@ func _ready() -> void:
 	_set_length(0)
 	raycast.enabled = false
 	explosion.visible = false
+	
+	# Set raycast to detect both areas and physics bodies
+	raycast.collide_with_areas = true
+	raycast.collide_with_bodies = true
+	
 	# Connect to the animation_finished signal
 	if !explosion.animation_finished.is_connected(_on_explosion_animation_finished):
 		explosion.animation_finished.connect(_on_explosion_animation_finished)
