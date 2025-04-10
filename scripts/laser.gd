@@ -37,13 +37,9 @@ func _physics_process(delta: float) -> void:
 
 
 func update_beam(delta: float) -> void:
-	# Get mouse position in world coordinates
-	var mouse_pos = get_global_mouse_position()
-	var distance_to_mouse = global_position.distance_to(mouse_pos)
-	
 	# Make sure raycast is enabled and pointing in the right direction
 	raycast.enabled = true
-	# Set raycast length - use a long value to ensure it can reach targets
+	# Set raycast length - use the beam_length value
 	raycast.target_position = Vector2(beam_length, 0)
 	# Force raycast update to ensure fresh collision info
 	raycast.force_raycast_update()
@@ -52,42 +48,33 @@ func update_beam(delta: float) -> void:
 		var collision_point = raycast.get_collision_point()
 		var distance_to_collision = global_position.distance_to(collision_point)
 		
-		# Check if mouse is beyond the collision point
-		if distance_to_mouse > distance_to_collision:
-			# Mouse is beyond collision, stop at collision point
-			_set_length(distance_to_collision)
-			
-			# Show explosion at collision point - using direct collision point
-			# Only check distance if explosion is already active to avoid jitter
-			if !_is_exploding || (_is_exploding && _last_collision_point.distance_to(collision_point) > 5.0):
-				_show_explosion_at(collision_point)
-				_last_collision_point = collision_point
-			else:
-				# Always update explosion position to match current collision point
-				explosion.global_position = collision_point
-
-			# Add hurt effect to the collider
-			var collider = raycast.get_collider()
-			if collider:
-				# If it's a Killzone, try to get its parent (the enemy)
-				if collider.name == "Killzone" && collider.get_parent() && collider.get_parent().has_method("hurt"):
-					collider.get_parent().hurt(delta)
-				# Otherwise check if the collider itself has the hurt method
-				elif collider.has_method("hurt"):
-					collider.hurt(delta)
+		# Always set the beam to reach the collision point
+		_set_length(distance_to_collision)
+		
+		# Show explosion at collision point
+		if !_is_exploding || (_is_exploding && _last_collision_point.distance_to(collision_point) > 5.0):
+			_show_explosion_at(collision_point)
+			_last_collision_point = collision_point
 		else:
-			# Mouse is before collision, stop at mouse position
-			_set_length(min(distance_to_mouse, beam_length))
-			# Hide explosion when not hitting anything
-			explosion.visible = false
-			_is_exploding = false
+			# Always update explosion position to match current collision point
+			explosion.global_position = collision_point
+
+		# Add hurt effect to the collider
+		var collider = raycast.get_collider()
+		if collider:
+			# If it's a Killzone, try to get its parent (the enemy)
+			if collider.name == "Killzone" && collider.get_parent() && collider.get_parent().has_method("hurt"):
+				collider.get_parent().hurt(delta)
+			# Otherwise check if the collider itself has the hurt method
+			elif collider.has_method("hurt"):
+				collider.hurt(delta)
 	else:
-		# No collision detected, stop at mouse position or max length
-		_set_length(min(distance_to_mouse, beam_length))
+		# No collision detected, use max beam length
+		_set_length(beam_length)
 		# Hide explosion when not hitting anything
 		explosion.visible = false
 		_is_exploding = false
-	
+
 
 func _show_explosion_at(collision_position: Vector2) -> void:
 	explosion.global_position = collision_position
