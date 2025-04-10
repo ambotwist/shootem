@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cr70g5o25q6cu"
-valid=false
+uid="uid://xjo5gwgkgt6b"
+path="res://.godot/imported/hero+bestiary01.png-b903d0aa6d42d08adb0c5470762e8335.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://assets/sprites/character/hero_idle+hit-Sheet-Sheet.aseprite"
+source_file="res://assets/sprites/character/hero+bestiary01.png"
+dest_files=["res://.godot/imported/hero+bestiary01.png-b903d0aa6d42d08adb0c5470762e8335.ctex"]
 
 [params]
 
