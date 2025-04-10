@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dema00g3wgrhp"]
+[gd_scene load_steps=10 format=3 uid="uid://dema00g3wgrhp"]
 
 [ext_resource type="Script" uid="uid://ctukyawukx1bx" path="res://scripts/laser.gd" id="1_xmihv"]
+[ext_resource type="Texture2D" uid="uid://xjo5gwgkgt6b" path="res://assets/sprites/character/hero+bestiary01.png" id="2_a7dhc"]
 
 [sub_resource type="Animation" id="Animation_xmihv"]
 resource_name = "start_beam"
@@ -80,6 +81,28 @@ _data = {
 &"stop_beam": SubResource("Animation_jjj73")
 }
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_a7dhc"]
+atlas = ExtResource("2_a7dhc")
+region = Rect2(176, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jjj73"]
+atlas = ExtResource("2_a7dhc")
+region = Rect2(192, 48, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_412cd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a7dhc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jjj73")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
 [node name="Laser" type="Node2D"]
 script = ExtResource("1_xmihv")
 
@@ -104,5 +127,16 @@ end_cap_mode = 2
 libraries = {
 &"": SubResource("AnimationLibrary_jjj73")
 }
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(50, 0)
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="Explosion" type="AnimatedSprite2D" parent="."]
+position = Vector2(58, 0)
+sprite_frames = SubResource("SpriteFrames_412cd")
+frame = 1
+frame_progress = 0.131096
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
