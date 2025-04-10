@@ -1,0 +1,84 @@
+[gd_scene load_steps=12 format=3 uid="uid://o73ykes2xmpg"]
+
+[ext_resource type="Texture2D" uid="uid://xjo5gwgkgt6b" path="res://assets/sprites/character/hero+bestiary01.png" id="1_ktqa0"]
+[ext_resource type="Script" uid="uid://rtfhatr5c3op" path="res://scripts/orb.gd" id="1_ubfm6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ubfm6"]
+atlas = ExtResource("1_ktqa0")
+region = Rect2(208, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g6cbt"]
+atlas = ExtResource("1_ktqa0")
+region = Rect2(128, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vnh3v"]
+atlas = ExtResource("1_ktqa0")
+region = Rect2(144, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fguff"]
+atlas = ExtResource("1_ktqa0")
+region = Rect2(160, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g1tib"]
+atlas = ExtResource("1_ktqa0")
+region = Rect2(176, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gsofs"]
+atlas = ExtResource("1_ktqa0")
+region = Rect2(192, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eovkk"]
+atlas = ExtResource("1_ktqa0")
+region = Rect2(208, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j4wqc"]
+atlas = ExtResource("1_ktqa0")
+region = Rect2(192, 80, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_n86rm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ubfm6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g6cbt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vnh3v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fguff")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g1tib")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gsofs")
+}],
+"loop": false,
+"name": &"consume",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eovkk")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j4wqc")
+}],
+"loop": true,
+"name": &"empty",
+"speed": 5.0
+}]
+
+[node name="Orb" type="Node2D"]
+script = ExtResource("1_ubfm6")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_n86rm")

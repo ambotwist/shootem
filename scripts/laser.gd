@@ -14,6 +14,13 @@ var _is_active: bool
 var _last_collision_point: Vector2 = Vector2.ZERO
 var _is_exploding: bool = false
 
+# Define collision layers
+enum CollisionLayers {
+	WORLD = 1,       # Layer 1 - World/environment
+	ENEMIES = 2,     # Layer 2 - Enemies
+	CHARACTER = 4    # Layer 3 - Player character
+}
+
 func _ready() -> void:
 	visible = false
 	_is_active = false
@@ -25,6 +32,9 @@ func _ready() -> void:
 	# Set raycast to detect both areas and physics bodies
 	raycast.collide_with_areas = true
 	raycast.collide_with_bodies = true
+	
+	# Set collision mask - we want to hit WORLD and ENEMIES but not CHARACTER
+	raycast.collision_mask = CollisionLayers.WORLD | CollisionLayers.ENEMIES
 	
 	# Connect to the animation_finished signal
 	if !explosion.animation_finished.is_connected(_on_explosion_animation_finished):

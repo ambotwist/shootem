@@ -146,6 +146,7 @@ animations = [{
 }]
 
 [node name="Laser" type="Node2D"]
+z_index = 5
 script = ExtResource("1_xmihv")
 
 [node name="Glow" type="Line2D" parent="."]
@@ -158,8 +159,8 @@ end_cap_mode = 2
 
 [node name="Beam" type="Line2D" parent="."]
 points = PackedVector2Array(0, 0, 20, 0)
-width = 2.0
-default_color = Color(0.984541, 0.994619, 0.796759, 1)
+width = 0.0
+default_color = Color(0.937255, 0.945098, 0.556863, 0)
 texture_mode = 1
 begin_cap_mode = 2
 end_cap_mode = 2

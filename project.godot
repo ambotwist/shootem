@@ -56,3 +56,4 @@ fire={
 
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="mobile"
+environment/defaults/default_clear_color=Color(0.0784314, 0.0862745, 0.137255, 1)

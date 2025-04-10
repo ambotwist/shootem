@@ -7,14 +7,113 @@ extends CharacterBody2D
 
 @onready var attack_pivot: = $AttackPivot
 @onready var laser = $AttackPivot/Laser
+@onready var orb1 = $Orbs/Orb1
+@onready var orb2 = $Orbs/Orb2
+@onready var orb3 = $Orbs/Orb3
+@onready var orbsTimer : Timer = $Orbs/OrbsTimer
+@onready var regenTimer : Timer = $Orbs/RegenTimer
+@onready var cooldownTimer : Timer = $Orbs/CooldownTimer
 
+# Track which orbs need regeneration
+var orb1_needs_regen = false
+var orb2_needs_regen = false
+var orb3_needs_regen = false
+var is_regenerating = false
+var is_firing = false  # Track if we're currently in the firing process
 
+func _ready():
+	# Setup collision - make sure character is on layer 3
+	collision_layer = 4  # Layer 3 - CHARACTER
+	
+	orbsTimer.paused = true
+	
+	# Setup regeneration timer
+	regenTimer.wait_time = 0.2
+	regenTimer.one_shot = true
+	
+	# Setup cooldown timer
+	cooldownTimer.wait_time = 1.0
+	cooldownTimer.one_shot = true
+	
+	# Connect signals
+	if not regenTimer.timeout.is_connected(_on_regeneration_timer_timeout):
+		regenTimer.timeout.connect(_on_regeneration_timer_timeout)
+	
+	if not cooldownTimer.timeout.is_connected(_on_cooldown_timer_timeout):
+		cooldownTimer.timeout.connect(_on_cooldown_timer_timeout)
+	
+	
 func _process(delta: float):
-	if Input.is_action_just_pressed("fire"):
-		laser.activate()
-	if Input.is_action_just_released("fire"):
-		laser.deactivate()
+	if Input.is_action_pressed("fire") and not is_firing and not is_regenerating:
+		_process_orbs()
 
+
+func _process_orbs():
+	if !orb1._is_disabled && orbsTimer.paused:
+		shoot_laser(orb1)
+	elif !orb2._is_disabled && orbsTimer.paused:
+		shoot_laser(orb2)
+	elif !orb3._is_disabled && orbsTimer.paused:
+		shoot_laser(orb3)
+
+func shoot_laser(orb):
+	is_firing = true
+	attack_pivot.global_position = orb.global_position
+	orbsTimer.paused = false
+	orbsTimer.start(0.2)
+	laser.activate()
+	orb.consume()
+	
+	# Mark orb for regeneration
+	if orb == orb1:
+		orb1_needs_regen = true
+	elif orb == orb2:
+		orb2_needs_regen = true
+	elif orb == orb3:
+		orb3_needs_regen = true
+	
+	# Always restart the cooldown timer when an orb is consumed
+	# This ensures the 1-second cooldown is reset with each shot
+	cooldownTimer.stop()
+	cooldownTimer.start()
+	
+	await orbsTimer.timeout
+	laser.deactivate()
+	orbsTimer.paused = true
+	is_firing = false  # Allow firing the next orb if available
+
+func _on_cooldown_timer_timeout():
+	# Start regenerating orbs if any need regeneration
+	if (orb1_needs_regen || orb2_needs_regen || orb3_needs_regen) and not is_regenerating:
+		is_regenerating = true
+		regenTimer.start()
+
+func _on_regeneration_timer_timeout():
+	# Regenerate orbs in specific order: orb3, orb2, orb1
+	if orb3_needs_regen:
+		orb3.regen()
+		orb3_needs_regen = false
+		
+		# Continue regeneration if more orbs need it
+		if orb2_needs_regen || orb1_needs_regen:
+			regenTimer.start()
+		else:
+			is_regenerating = false
+			
+	elif orb2_needs_regen:
+		orb2.regen()
+		orb2_needs_regen = false
+		
+		# Continue regeneration if more orbs need it
+		if orb1_needs_regen:
+			regenTimer.start()
+		else:
+			is_regenerating = false
+			
+	elif orb1_needs_regen:
+		orb1.regen()
+		orb1_needs_regen = false
+		is_regenerating = false
 
 func _physics_process(delta: float) -> void:
 
