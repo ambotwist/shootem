@@ -27,6 +27,7 @@ radius = 8.0
 z_index = 3
 collision_layer = 4
 script = ExtResource("1_my7n2")
+metadata/_edit_lock_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_0lw5n")

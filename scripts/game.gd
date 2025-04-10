@@ -30,9 +30,6 @@ func _ready() -> void:
 		if root_hoodeye:
 			root_hoodeye.add_to_group("enemies")
 	
-	# Count existing enemies
-	enemy_count = get_tree().get_nodes_in_group("enemies").size()
-	print("Starting with " + str(enemy_count) + " enemies")
 	
 	# Create the spawn timer
 	spawn_timer = Timer.new()

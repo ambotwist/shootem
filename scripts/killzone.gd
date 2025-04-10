@@ -20,11 +20,8 @@ func _process(delta: float) -> void:
 	pass
 
 
-func _on_body_entered(body:Node2D) -> void:
-	# Debug output to help troubleshoot
-	print("Body entered: ", body.name)
+func _on_body_entered(body:Node2D) -> void:	
 	if body.name == "Character":
-		print("Character collision detected, reloading scene")
 		get_tree().reload_current_scene()
 	
 
