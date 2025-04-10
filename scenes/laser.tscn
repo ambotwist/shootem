@@ -1,11 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://dema00g3wgrhp"]
+[gd_scene load_steps=14 format=3 uid="uid://dema00g3wgrhp"]
 
 [ext_resource type="Script" uid="uid://ctukyawukx1bx" path="res://scripts/laser.gd" id="1_xmihv"]
 [ext_resource type="Texture2D" uid="uid://xjo5gwgkgt6b" path="res://assets/sprites/character/hero+bestiary01.png" id="2_a7dhc"]
 
 [sub_resource type="Animation" id="Animation_xmihv"]
 resource_name = "start_beam"
-length = 0.2
+length = 0.15
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -13,10 +13,10 @@ tracks/0/path = NodePath("Beam:default_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
+"times": PackedFloat32Array(0, 0.133333),
 "transitions": PackedFloat32Array(1, 9.84915),
 "update": 0,
-"values": [Color(0.937255, 0.945098, 0.556863, 0), Color(0.929217, 0.961833, 0.280713, 1)]
+"values": [Color(0.937255, 0.945098, 0.556863, 0), Color(0.984541, 0.994619, 0.796759, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -25,37 +25,10 @@ tracks/1/path = NodePath("Beam:width")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2),
+"times": PackedFloat32Array(0, 0.133333),
 "transitions": PackedFloat32Array(1, 9.84914),
 "update": 0,
 "values": [0.0, 2.0]
-}
-
-[sub_resource type="Animation" id="Animation_a7dhc"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Beam:default_color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(0.937255, 0.945098, 0.556863, 1)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Beam:width")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [1.0]
 }
 
 [sub_resource type="Animation" id="Animation_jjj73"]
@@ -76,9 +49,78 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_jjj73"]
 _data = {
-&"RESET": SubResource("Animation_a7dhc"),
 &"start_beam": SubResource("Animation_xmihv"),
 &"stop_beam": SubResource("Animation_jjj73")
+}
+
+[sub_resource type="Animation" id="Animation_q8rul"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Glow:width")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [4.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_788yo"]
+_data = {
+&"RESET": SubResource("Animation_q8rul")
+}
+
+[sub_resource type="Animation" id="Animation_a7dhc"]
+resource_name = "start_glow"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Glow:default_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.233333),
+"transitions": PackedFloat32Array(4.92458, 1, 5.27803),
+"update": 0,
+"values": [Color(0.984222, 0.993733, 0, 0), Color(0.984222, 0.993733, 0, 0), Color(0.938974, 0.868941, 0.238841, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Glow:width")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.233333),
+"transitions": PackedFloat32Array(1, 1, 0.615571),
+"update": 0,
+"values": [0.0, 0.0, 4.0]
+}
+
+[sub_resource type="Animation" id="Animation_412cd"]
+resource_name = "stop_glow"
+length = 0.15
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Glow:default_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.133333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.922865, 0.932206, 0.414146, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q8rul"]
+_data = {
+&"start_glow": SubResource("Animation_a7dhc"),
+&"stop_glow": SubResource("Animation_412cd")
 }
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a7dhc"]
@@ -107,25 +149,30 @@ animations = [{
 script = ExtResource("1_xmihv")
 
 [node name="Glow" type="Line2D" parent="."]
-visible = false
 points = PackedVector2Array(0, 0, 20, 0)
 width = 4.0
-default_color = Color(1, 0.837478, 0.897619, 1)
+default_color = Color(0.938974, 0.868941, 0.238841, 1)
 texture_mode = 1
 begin_cap_mode = 2
 end_cap_mode = 2
 
 [node name="Beam" type="Line2D" parent="."]
 points = PackedVector2Array(0, 0, 20, 0)
-width = 1.0
-default_color = Color(0.937255, 0.945098, 0.556863, 1)
+width = 2.0
+default_color = Color(0.984541, 0.994619, 0.796759, 1)
 texture_mode = 1
 begin_cap_mode = 2
 end_cap_mode = 2
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayerBeam" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_jjj73")
+}
+
+[node name="AnimationPlayerGlow" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_788yo"),
+&"animations": SubResource("AnimationLibrary_q8rul")
 }
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
@@ -139,4 +186,5 @@ sprite_frames = SubResource("SpriteFrames_412cd")
 frame = 1
 frame_progress = 0.131096
 
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="animation_finished" from="AnimationPlayerBeam" to="." method="_on_animation_player_animation_finished"]
+[connection signal="animation_finished" from="AnimationPlayerGlow" to="." method="_on_animation_player_glow_animation_finished"]

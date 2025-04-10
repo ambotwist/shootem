@@ -3,7 +3,7 @@ shader_type canvas_item;
 uniform float brightness;
 void vertex() {
 	// Called for every vertex the material is visible on.
-	
+
 }
 
 void fragment() {
@@ -11,7 +11,7 @@ void fragment() {
 	vec4 c = texture(TEXTURE, UV);
 	c.rgb += vec3(brightness);
 	COLOR = c;
-	
+
 }
 
 //void light() {

@@ -5,7 +5,8 @@ extends Node2D
 
 @onready var beam: Line2D = $Beam
 @onready var glow: Line2D = $Glow
-@onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var animation_player_beam: AnimationPlayer = $AnimationPlayerBeam
+@onready var animation_player_glow: AnimationPlayer = $AnimationPlayerGlow
 @onready var raycast: RayCast2D = $RayCast2D
 @onready var explosion: AnimatedSprite2D = $Explosion
 
@@ -114,8 +115,8 @@ func activate():
 		visible = true
 		raycast.enabled = true
 		raycast.force_raycast_update()
-		animation_player.play("start_beam")
-
+		animation_player_beam.play("start_beam")
+		animation_player_glow.play("animations/start_glow")
 
 func deactivate():
 	if _is_active:
@@ -123,9 +124,14 @@ func deactivate():
 		raycast.enabled = false
 		explosion.visible = false
 		_is_exploding = false
-		animation_player.play("stop_beam")
+		animation_player_beam.play("stop_beam")
+		animation_player_glow.play("animations/stop_glow")
 
 
 func _on_animation_player_animation_finished(anim_name:StringName) -> void:
 	if anim_name == "stop_beam":
+		visible = false
+
+func _on_animation_player_glow_animation_finished(anim_name:StringName) -> void:
+	if anim_name == "stop_glow":
 		visible = false
