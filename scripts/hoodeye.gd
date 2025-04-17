@@ -1,8 +1,7 @@
 extends Node2D
 
 @export var SPEED: float = 25.0
-@export var max_hurt: float = 0.25
-@export var hurt_cooldown_speed: float = 0.3
+@export var max_hurt: float = 0.5
 
 @onready var sprites: Sprite2D = $Sprites
 
@@ -29,9 +28,6 @@ func _process(delta: float) -> void:
 	# Destroy if moved too far off screen to clean up
 	if position.x < -300:
 		queue_free()
-		
-	if _hurt > 0:
-		hurt(-hurt_cooldown_speed * delta)
 
 
 func hurt(amount: float) -> void:

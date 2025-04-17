@@ -2,8 +2,10 @@ extends CharacterBody2D
 
 
 @export var SPEED: float = 200.0
-@export var marginX: int = 8
-@export var marginY: int = 16
+@export var regen_time: float = 0.3
+@export var cooldown_time: float = 1.5
+var marginX: int = 8
+var marginY: int = 12
 
 @onready var attack_pivot: = $AttackPivot
 @onready var laser = $AttackPivot/Laser
@@ -22,25 +24,15 @@ var is_regenerating = false
 var is_firing = false  # Track if we're currently in the firing process
 
 func _ready():
-	# Setup collision - make sure character is on layer 3
-	collision_layer = 4  # Layer 3 - CHARACTER
-	
 	orbsTimer.paused = true
 	
 	# Setup regeneration timer
-	regenTimer.wait_time = 0.2
+	regenTimer.wait_time = regen_time
 	regenTimer.one_shot = true
 	
 	# Setup cooldown timer
-	cooldownTimer.wait_time = 1.0
+	cooldownTimer.wait_time = cooldown_time
 	cooldownTimer.one_shot = true
-	
-	# Connect signals
-	if not regenTimer.timeout.is_connected(_on_regeneration_timer_timeout):
-		regenTimer.timeout.connect(_on_regeneration_timer_timeout)
-	
-	if not cooldownTimer.timeout.is_connected(_on_cooldown_timer_timeout):
-		cooldownTimer.timeout.connect(_on_cooldown_timer_timeout)
 	
 	
 func _process(delta: float):
@@ -55,6 +47,7 @@ func _process_orbs():
 		shoot_laser(orb2)
 	elif !orb3._is_disabled && orbsTimer.paused:
 		shoot_laser(orb3)
+
 
 func shoot_laser(orb):
 	is_firing = true
@@ -73,7 +66,6 @@ func shoot_laser(orb):
 		orb3_needs_regen = true
 	
 	# Always restart the cooldown timer when an orb is consumed
-	# This ensures the 1-second cooldown is reset with each shot
 	cooldownTimer.stop()
 	cooldownTimer.start()
 	
@@ -82,13 +74,15 @@ func shoot_laser(orb):
 	orbsTimer.paused = true
 	is_firing = false  # Allow firing the next orb if available
 
+
 func _on_cooldown_timer_timeout():
 	# Start regenerating orbs if any need regeneration
 	if (orb1_needs_regen || orb2_needs_regen || orb3_needs_regen) and not is_regenerating:
 		is_regenerating = true
 		regenTimer.start()
 
-func _on_regeneration_timer_timeout():
+
+func _on_regen_timer_timeout() -> void:
 	# Regenerate orbs in specific order: orb3, orb2, orb1
 	if orb3_needs_regen:
 		orb3.regen()
