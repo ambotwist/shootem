@@ -8,6 +8,7 @@ var marginX: int = 8
 var marginY: int = 12
 
 @onready var attack_pivot: = $AttackPivot
+@onready var special_pivot: = $SpecialPivot
 @onready var laser = $AttackPivot/Laser
 @onready var orb1 = $Orbs/Orb1
 @onready var orb2 = $Orbs/Orb2
@@ -15,6 +16,8 @@ var marginY: int = 12
 @onready var orbsTimer : Timer = $Orbs/OrbsTimer
 @onready var regenTimer : Timer = $Orbs/RegenTimer
 @onready var cooldownTimer : Timer = $Orbs/CooldownTimer
+@onready var thorns = $SpecialPivot/Thorns
+
 
 # Track which orbs need regeneration
 var orb1_needs_regen = false
@@ -38,7 +41,14 @@ func _ready():
 func _process(delta: float):
 	if Input.is_action_pressed("fire") and not is_firing and not is_regenerating:
 		_process_orbs()
+	if Input.is_action_pressed("special") and not is_firing:
+		_shoot_thorns()
 
+func _shoot_thorns():
+	is_firing = true
+	attack_pivot.global_position = global_position
+	thorns.shoot_thorns()
+	is_firing = false
 
 func _process_orbs():
 	if !orb1._is_disabled && orbsTimer.paused:
@@ -127,9 +137,9 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	clamp_to_visible_area()
 
-	# Attack Pivot
+	# Pivots
 	attack_pivot.look_at(get_global_mouse_position())
-
+	special_pivot.look_at(get_global_mouse_position())
 
 func clamp_to_visible_area():
 	var camera = get_viewport().get_camera_2d()

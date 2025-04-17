@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dnijcpx8rr3sl"]
+[gd_scene load_steps=9 format=3 uid="uid://dnijcpx8rr3sl"]
 
 [ext_resource type="Script" uid="uid://dwm6w750yx171" path="res://scripts/character.gd" id="1_my7n2"]
 [ext_resource type="Texture2D" uid="uid://xjo5gwgkgt6b" path="res://assets/sprites/character/hero+bestiary01.png" id="2_my7n2"]
 [ext_resource type="PackedScene" uid="uid://o73ykes2xmpg" path="res://scenes/orb.tscn" id="4_dp8ca"]
 [ext_resource type="PackedScene" uid="uid://dema00g3wgrhp" path="res://scenes/laser.tscn" id="4_my7n2"]
+[ext_resource type="PackedScene" uid="uid://cehihqwmbodr1" path="res://scenes/vinebow.tscn" id="5_dp8ca"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dp8ca"]
 atlas = ExtResource("2_my7n2")
@@ -61,6 +62,11 @@ position = Vector2(-9, -24)
 [node name="RegenTimer" type="Timer" parent="Orbs"]
 
 [node name="CooldownTimer" type="Timer" parent="Orbs"]
+
+[node name="SpecialPivot" type="Marker2D" parent="."]
+
+[node name="Thorns" parent="SpecialPivot" instance=ExtResource("5_dp8ca")]
+position = Vector2(21, 4.00004)
 
 [connection signal="timeout" from="Orbs/RegenTimer" to="." method="_on_regen_timer_timeout"]
 [connection signal="timeout" from="Orbs/CooldownTimer" to="." method="_on_cooldown_timer_timeout"]

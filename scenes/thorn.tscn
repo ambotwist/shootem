@@ -1,0 +1,82 @@
+[gd_scene load_steps=10 format=3 uid="uid://iuu18x1q22j7"]
+
+[ext_resource type="Texture2D" uid="uid://dlf1rkh7y2bw0" path="res://assets/sprites/character/special_thorn.png" id="1_ss7ns"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k210a"]
+atlas = ExtResource("1_ss7ns")
+region = Rect2(16, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yf172"]
+atlas = ExtResource("1_ss7ns")
+region = Rect2(32, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kfgt8"]
+atlas = ExtResource("1_ss7ns")
+region = Rect2(48, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1iqhf"]
+atlas = ExtResource("1_ss7ns")
+region = Rect2(15, 0, 17, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o133w"]
+atlas = ExtResource("1_ss7ns")
+region = Rect2(0, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yeqb5"]
+atlas = ExtResource("1_ss7ns")
+region = Rect2(64, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hdplm"]
+atlas = ExtResource("1_ss7ns")
+region = Rect2(128, 64, 64, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rphs4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k210a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yf172")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kfgt8")
+}],
+"loop": false,
+"name": &"thorn_end",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1iqhf")
+}],
+"loop": false,
+"name": &"thorn_fire",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o133w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yeqb5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hdplm")
+}],
+"loop": true,
+"name": &"vine",
+"speed": 5.0
+}]
+
+[node name="Thorn" type="Node2D"]
+
+[node name="ProjectileAS" type="AnimatedSprite2D" parent="."]
+position = Vector2(17, 0)
+sprite_frames = SubResource("SpriteFrames_rphs4")
+animation = &"thorn_fire"
+
+[node name="Area2D" type="Area2D" parent="ProjectileAS"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="ProjectileAS/Area2D"]
+polygon = PackedVector2Array(-7, 4, 8, 0, 8, -1, -7, -6)
