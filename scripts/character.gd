@@ -16,7 +16,7 @@ var marginY: int = 12
 @onready var orbsTimer : Timer = $Orbs/OrbsTimer
 @onready var regenTimer : Timer = $Orbs/RegenTimer
 @onready var cooldownTimer : Timer = $Orbs/CooldownTimer
-@onready var thorns = $SpecialPivot/Thorns
+@onready var vinebow = $SpecialPivot/Vinebow
 
 
 # Track which orbs need regeneration
@@ -43,11 +43,19 @@ func _process(delta: float):
 		_process_orbs()
 	if Input.is_action_pressed("special") and not is_firing:
 		_shoot_thorns()
+	if Input.is_action_pressed("middle") and not is_firing:
+		_shoot_vines()
+
+func _shoot_vines():
+	is_firing = true		
+	special_pivot.global_position = global_position
+	vinebow.shoot_vines()
+	is_firing = false
 
 func _shoot_thorns():
 	is_firing = true
 	attack_pivot.global_position = global_position
-	thorns.shoot_thorns()
+	vinebow.shoot_thorns()
 	is_firing = false
 
 func _process_orbs():

@@ -1,0 +1,64 @@
+[gd_scene load_steps=6 format=3 uid="uid://inujp6mb8vp2"]
+
+[ext_resource type="Texture2D" uid="uid://dlf1rkh7y2bw0" path="res://assets/sprites/character/special_thorn.png" id="1_tfq28"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_71s2g"]
+atlas = ExtResource("1_tfq28")
+region = Rect2(128, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c6ol5"]
+atlas = ExtResource("1_tfq28")
+region = Rect2(64, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_smajk"]
+atlas = ExtResource("1_tfq28")
+region = Rect2(0, 64, 64, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rphs4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_71s2g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c6ol5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_smajk")
+}],
+"loop": false,
+"name": &"vine_retract",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_smajk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c6ol5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_71s2g")
+}],
+"loop": false,
+"name": &"vine_shoot",
+"speed": 6.0
+}]
+
+[node name="Vine" type="Node2D"]
+
+[node name="ProjectileAS" type="AnimatedSprite2D" parent="."]
+position = Vector2(17, 0)
+sprite_frames = SubResource("SpriteFrames_rphs4")
+animation = &"vine_retract"
+frame = 2
+frame_progress = 1.0
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(17, 0)
+collision_layer = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+position = Vector2(-8.69, 0)
+scale = Vector2(1, 1.00002)
+polygon = PackedVector2Array(-7, 4, 8, 0, 8, -1, -7, -6)

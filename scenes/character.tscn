@@ -65,7 +65,7 @@ position = Vector2(-9, -24)
 
 [node name="SpecialPivot" type="Marker2D" parent="."]
 
-[node name="Thorns" parent="SpecialPivot" instance=ExtResource("5_dp8ca")]
+[node name="Vinebow" parent="SpecialPivot" instance=ExtResource("5_dp8ca")]
 position = Vector2(21, 4.00004)
 
 [connection signal="timeout" from="Orbs/RegenTimer" to="." method="_on_regen_timer_timeout"]
