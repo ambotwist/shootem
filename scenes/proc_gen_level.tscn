@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://dkssp7qqf2y7k"]
+
+[node name="proc_gen_level" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]

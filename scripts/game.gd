@@ -2,15 +2,15 @@ extends Node2D
 
 @export var spawn_timer_duration: float = 3.0
 @export var max_enemies: int = 15
+# Spawn positions
+@export var top_position: Vector2 = Vector2(222, -69)
+@export var bottom_position: Vector2 = Vector2(222, 107)
 
 var spawn_timer: Timer
 var hoodeye_scene: PackedScene
 var spawn_on_top: bool = true
 var enemy_count: int = 0
 
-# Spawn positions
-var top_position: Vector2 = Vector2(222, -69)
-var bottom_position: Vector2 = Vector2(222, 107)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
