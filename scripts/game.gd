@@ -5,31 +5,19 @@ extends Node2D
 # Spawn positions
 @export var top_position: Vector2 = Vector2(222, -69)
 @export var bottom_position: Vector2 = Vector2(222, 107)
+# Level node path
+@export_node_path var level_path
 
 var spawn_timer: Timer
-var hoodeye_scene: PackedScene
 var spawn_on_top: bool = true
-var enemy_count: int = 0
+var level_manager: Node2D
 
 
 # Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	# Load the hoodeye scene
-	hoodeye_scene = preload("res://scenes/hoodeye.tscn")
-	
-	# Add existing hoodeyes to the enemies group
-	var existing_hoodeyes = get_tree().get_nodes_in_group("enemies")
-	if existing_hoodeyes.size() == 0:
-		# If no enemies are in the group, find the existing ones in the scene
-		var map_hoodeye = $Map/Hoodeye
-		var root_hoodeye = $Hoodeye
-		
-		if map_hoodeye:
-			map_hoodeye.add_to_group("enemies")
-		
-		if root_hoodeye:
-			root_hoodeye.add_to_group("enemies")
-	
+func _ready() -> void:	
+	# Get reference to level manager
+	if level_path:
+		level_manager = get_node(level_path)
 	
 	# Create the spawn timer
 	spawn_timer = Timer.new()
@@ -46,31 +34,14 @@ func _process(delta: float) -> void:
 	pass
 
 func _on_spawn_timer_timeout() -> void:
-	# Check if we've reached the maximum number of enemies
-	if enemy_count >= max_enemies:
-		return
+	# Calculate spawn position based on camera/scroll position
+	var spawn_x_offset = 100  # Spawn ahead of camera view
+	var spawn_x = 0
 	
-	# Create a new hoodeye instance
-	var new_hoodeye = hoodeye_scene.instantiate()
-	add_child(new_hoodeye)
-	
-	# Add to enemies group for tracking
-	new_hoodeye.add_to_group("enemies")
-	
-	# Set the position based on whether we're spawning on top or bottom
-	if spawn_on_top:
-		new_hoodeye.position = top_position
+	if level_manager:
+		spawn_x = level_manager.get_scroll_position().x + spawn_x_offset
 	else:
-		new_hoodeye.position = bottom_position
-		new_hoodeye.z_index = 1  # Match the z-index of the bottom hoodeye
+		# If no level manager, use a default position
+		spawn_x = top_position.x
+		
 	
-	# Toggle for next spawn
-	spawn_on_top = !spawn_on_top
-	
-	# Increment enemy count
-	enemy_count += 1
-	
-
-# Function to handle enemy death
-func enemy_died() -> void:
-	enemy_count -= 1

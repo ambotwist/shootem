@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=4 uid="uid://bmudwugh6bfxn"]
+
+[ext_resource type="Script" uid="uid://uvvb57x8uujo" path="res://scripts/level_manager.gd" id="1_j7r45"]
+[ext_resource type="PackedScene" uid="uid://d0jv655h1nc2q" path="res://scenes/chunk_spawner.tscn" id="2_47x4c"]
+[ext_resource type="PackedScene" uid="uid://c5nnfvprmbdg3" path="res://scenes/chunk_queue.tscn" id="3_smi6a"]
+[ext_resource type="PackedScene" uid="uid://dnijcpx8rr3sl" path="res://scenes/character.tscn" id="4_mx8sn"]
+[ext_resource type="TileSet" uid="uid://dal1o1psjn74a" path="res://resources/chunks.tres" id="5_ppgk2"]
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_j7r45")
+chunk_spawner_path = NodePath("ChunkSpawner")
+chunk_queue_path = NodePath("ChunkQueue")
+player_path = NodePath("Character")
+camera_path = NodePath("Camera2D")
+
+[node name="ChunkSpawner" parent="." instance=ExtResource("2_47x4c")]
+position = Vector2(48, 730)
+chunk_queue_path = NodePath("../ChunkQueue")
+
+[node name="ChunkQueue" parent="." instance=ExtResource("3_smi6a")]
+position = Vector2(-160, 192)
+
+[node name="Camera2D" type="Camera2D" parent="." groups=["camera"]]
+position = Vector2(215, 0)
+zoom = Vector2(4, 4)
+
+[node name="Character" parent="." instance=ExtResource("4_mx8sn")]
+scale = Vector2(0.75, 0.75)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD7/wsABwAbAAsAAAD8/wsABwAcAAsAAAD9/wsABwAdAAsAAAD+/wsABwAeAAsAAAD//wsABwAfAAsAAAAAAAsABwAbAAsAAAABAAsABwAcAAsAAAACAAsABwAdAAsAAAADAAsABwAeAAsAAAAEAAsABwAfAAsAAAAFAAsABwAgAAsAAAAGAAsABwAhAAsAAAD6////BwAKAAYAAAD6/wAABwAKAAcAAAD6/wEABwAKAAgAAAD6/wIABwAKAAkAAAD6/wMABwAKAAYAAAD6/wQABwAKAAcAAAD6/wUABwAKAAgAAAD6/wYABwAKAAkAAAD6/wcABwAKAAYAAAD6/wgABwAKAAcAAAD6/wkABwAKAAgAAAD6/woABwAKAAkAAAD6/wsABwAHAAwAAAD6//X/BwAfAA0AAAD6//v/BwAKAAYAAAD6//z/BwAKAAcAAAD6//3/BwAKAAgAAAD6//7/BwAKAAkAAAD6//f/BwAKAAcAAAD6//j/BwAKAAgAAAD6//n/BwAKAAkAAAD6//r/BwAKAAkAAAD6//b/BwAKAAYAAAD9//X/BwAfAAEAAAD+//X/BwAgAAEAAAD///X/BwAhAAEAAAAAAPX/BwAiAAEAAAABAPX/BwAjAAEAAAACAPX/BwAkAAEAAAADAPX/BwAlAAEAAAAEAPX/BwAmAAEAAAAFAPX/BwAnAAEAAAAGAPX/BwAmAAEAAAAHAPX/BwAnAAEAAAD7//X/BwAdAAEAAAD8//X/BwAeAAEAAAA=")
+tile_set = ExtResource("5_ppgk2")
