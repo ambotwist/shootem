@@ -10,3 +10,4 @@ bottom_position = Vector2(444, 151)
 level_path = NodePath("Level")
 
 [node name="Level" parent="." instance=ExtResource("2_qbsmt")]
+enable_speed_increase = false

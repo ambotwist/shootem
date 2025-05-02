@@ -10,11 +10,13 @@ extends Node2D
 @export var scroll_speed: float = 100.0  # pixels per second
 @export var min_scroll_speed: float = 100.0
 @export var max_scroll_speed: float = 300.0
-@export var speed_increase_rate: float = 0.0  # Increase by 5 units per second
+@export var speed_increase_rate: float = 5.0  # Increase by 5 units per second
+@export var enable_speed_increase: bool = true  # Whether speed should increase over time
 
 # Actual position of the virtual camera (for scrolling)
 var scroll_position: Vector2 = Vector2.ZERO
 var is_scrolling: bool = false
+var current_scroll_speed: float = 0.0  # Track the actual current scroll speed
 
 # References to actual nodes
 var chunk_spawner: Node2D
@@ -41,23 +43,27 @@ func _ready() -> void:
 	# Connect signals
 	chunk_queue.chunk_passed.connect(_on_chunk_passed)
 	
+	# Initialize current scroll speed from exported value
+	current_scroll_speed = scroll_speed
+	
 	# Start the level
 	start_level()
 
 func _process(delta: float) -> void:
 	if is_scrolling:
-		# Update scroll position
-		scroll_position.x += scroll_speed * delta
+		# Update scroll position using current scroll speed
+		scroll_position.x += current_scroll_speed * delta
 		
-		# Gradually increase the scroll speed over time
-		scroll_speed = min(scroll_speed + speed_increase_rate * delta, max_scroll_speed)
+		# Gradually increase the scroll speed over time if enabled
+		if enable_speed_increase:
+			current_scroll_speed = min(current_scroll_speed + speed_increase_rate * delta, max_scroll_speed)
 		
 		# Update camera position
 		if camera:
 			camera.global_position.x = scroll_position.x
 		
 		# Check if player has fallen too far behind
-		if player and player.global_position.x < scroll_position.x - 250:  
+		if player and player.global_position.x < scroll_position.x - 160:  # Half the chunk width
 			_on_player_left_behind()
 		
 		# Check if we need to generate new chunks or remove old ones
@@ -68,8 +74,8 @@ func start_level() -> void:
 	# Reset the scroll position
 	scroll_position = Vector2.ZERO
 	
-	# Reset scroll speed
-	scroll_speed = min_scroll_speed
+	# Reset scroll speed to the initial value set in the inspector
+	current_scroll_speed = scroll_speed
 	
 	# Start scrolling
 	is_scrolling = true
@@ -90,4 +96,9 @@ func _on_player_left_behind() -> void:
 	print("Player left behind - game over!")
 	
 func get_scroll_position() -> Vector2:
-	return scroll_position 
+	return scroll_position
+
+# Method to manually adjust the scroll speed at runtime
+func set_scroll_speed(new_speed: float) -> void:
+	scroll_speed = new_speed
+	current_scroll_speed = new_speed 
