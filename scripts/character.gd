@@ -18,8 +18,16 @@ var marginY: int = 12
 @onready var cooldownTimer : Timer = $Orbs/CooldownTimer
 @onready var vinebow = $SpecialPivot/Vinebow
 
-enum WeaponState {IDLE, FIRING_LASER, FIRING_THORNS, FIRING_VINES}
+enum WeaponState {IDLE, FIRING_LASER, FIRING_THORNS, FIRING_VINES, RECOVERY}
 var current_weapon_state = WeaponState.IDLE
+
+# Input buffer system
+enum BufferedAction {NONE, LASER, THORNS, VINES}
+var buffered_action = BufferedAction.NONE
+const BUFFER_FRAMES = 20  # 20 frames buffer window (approx 1/3 second at 60fps)
+var buffer_frames_left = 0
+const SPECIAL_RECOVERY_FRAMES = 30  # 30 frames recovery after special attack
+var recovery_frames_left = 0
 
 # Track which orbs need regeneration
 var orb1_needs_regen = false
@@ -45,12 +53,8 @@ func _ready():
 	laser.firing_completed.connect(_on_laser_firing_completed)
 	
 func _process(delta: float):
-	if Input.is_action_pressed("fire") and current_weapon_state == WeaponState.IDLE and not is_regenerating:
-		_process_orbs()
-	if Input.is_action_pressed("special") and current_weapon_state == WeaponState.IDLE:
-		_shoot_thorns()
-	if Input.is_action_pressed("middle") and current_weapon_state == WeaponState.IDLE:
-		_shoot_vines()
+	# Remove this entire function as it's replaced by _process_weapon_inputs and _process_weapon_timers
+	pass
 
 func _shoot_vines():
 	current_weapon_state = WeaponState.FIRING_VINES		
@@ -134,7 +138,6 @@ func _on_regen_timer_timeout() -> void:
 		is_regenerating = false
 
 func _physics_process(delta: float) -> void:
-
 	# Movement
 	var input_vector := Vector2(
 		Input.get_axis("move_left", "move_right"),
@@ -154,6 +157,91 @@ func _physics_process(delta: float) -> void:
 	# Pivots
 	attack_pivot.look_at(get_global_mouse_position())
 	special_pivot.look_at(get_global_mouse_position())
+	
+	# Process buffer and recovery timers
+	_process_weapon_timers()
+	
+	# Process weapon inputs
+	_process_weapon_inputs()
+
+func _process_weapon_timers():
+	# Update buffer frames
+	if buffer_frames_left > 0:
+		buffer_frames_left -= 1
+		if buffer_frames_left <= 0:
+			buffered_action = BufferedAction.NONE
+	
+	# Update recovery frames
+	if current_weapon_state == WeaponState.RECOVERY:
+		recovery_frames_left -= 1
+		if recovery_frames_left <= 0:
+			current_weapon_state = WeaponState.IDLE
+			_check_buffered_actions()
+
+func _process_weapon_inputs():
+	# Standard weapon (laser)
+	if Input.is_action_just_pressed("fire") and not is_regenerating:
+		if current_weapon_state == WeaponState.IDLE:
+			_process_orbs()
+		elif current_weapon_state != WeaponState.RECOVERY:
+			# Buffer the standard attack if not in recovery
+			buffer_frames_left = BUFFER_FRAMES
+			buffered_action = BufferedAction.LASER
+	
+	# Special weapons with priority (thorns, vines)
+	if Input.is_action_just_pressed("special"):
+		if current_weapon_state == WeaponState.IDLE:
+			_shoot_thorns()
+		elif current_weapon_state != WeaponState.RECOVERY:
+			# Special attacks override standard attack buffers
+			if buffered_action == BufferedAction.LASER:
+				# Cancel standard attack buffer
+				buffered_action = BufferedAction.THORNS
+				buffer_frames_left = BUFFER_FRAMES
+			elif buffered_action == BufferedAction.NONE:
+				# Create new buffer
+				buffered_action = BufferedAction.THORNS
+				buffer_frames_left = BUFFER_FRAMES
+	
+	if Input.is_action_just_pressed("middle"):
+		if current_weapon_state == WeaponState.IDLE:
+			_shoot_vines()
+		elif current_weapon_state != WeaponState.RECOVERY:
+			# Special attacks override standard attack buffers
+			if buffered_action == BufferedAction.LASER:
+				# Cancel standard attack buffer
+				buffered_action = BufferedAction.VINES
+				buffer_frames_left = BUFFER_FRAMES
+			elif buffered_action == BufferedAction.NONE:
+				# Create new buffer
+				buffered_action = BufferedAction.VINES
+				buffer_frames_left = BUFFER_FRAMES
+
+func _on_vinebow_firing_completed():
+	# Special attacks go to recovery state
+	current_weapon_state = WeaponState.RECOVERY
+	recovery_frames_left = SPECIAL_RECOVERY_FRAMES
+	
+func _on_laser_firing_completed():
+	# Standard attacks can immediately go to idle
+	current_weapon_state = WeaponState.IDLE
+	_check_buffered_actions()
+	
+func _check_buffered_actions():
+	# Execute any buffered actions if they exist
+	if buffered_action != BufferedAction.NONE:
+		match buffered_action:
+			BufferedAction.LASER:
+				if not is_regenerating:
+					_process_orbs()
+			BufferedAction.THORNS:
+				_shoot_thorns()
+			BufferedAction.VINES:
+				_shoot_vines()
+		
+		# Clear the buffer after executing the action
+		buffered_action = BufferedAction.NONE
+		buffer_frames_left = 0
 
 func clamp_to_visible_area():
 	var camera = get_viewport().get_camera_2d()
@@ -176,11 +264,3 @@ func clamp_to_visible_area():
 	# Clamp the character position
 	global_position.x = clamp(global_position.x, left_edge + marginX, right_edge - marginX)
 	global_position.y = clamp(global_position.y, top_edge + marginY, bottom_edge - marginY)
-
-func _on_vinebow_firing_completed():
-	# Reset the weapon state when vinebow firing is complete
-	current_weapon_state = WeaponState.IDLE
-	
-func _on_laser_firing_completed():
-	# Reset the weapon state when laser firing is complete
-	current_weapon_state = WeaponState.IDLE
