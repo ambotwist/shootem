@@ -26,6 +26,9 @@ func _ready() -> void:
 	# Set raycast to detect both areas and physics bodies
 	raycast.collide_with_areas = true
 	raycast.collide_with_bodies = true
+	
+	# Set the collision mask from the exported property
+	raycast.collision_mask = collision_mask
 
 	
 	# Connect to the animation_finished signal
@@ -48,7 +51,10 @@ func update_beam(delta: float) -> void:
 	
 	if raycast.is_colliding():
 		var collision_point = raycast.get_collision_point()
-		var distance_to_collision = global_position.distance_to(collision_point)
+		
+		# Convert the collision point to local coordinates for the beam
+		var local_collision_point = to_local(collision_point)
+		var distance_to_collision = local_collision_point.x
 		
 		# Always set the beam to reach the collision point
 		_set_length(distance_to_collision)
@@ -94,6 +100,8 @@ func _on_explosion_animation_finished() -> void:
 
 
 func _set_length(length: float) -> void:
+	# Make sure length is never negative
+	length = max(0, length)
 	beam.points[1].x = length
 	glow.points[1].x = length
 
