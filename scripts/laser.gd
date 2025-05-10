@@ -10,6 +10,9 @@ extends Node2D
 @onready var raycast: RayCast2D = $RayCast2D
 @onready var explosion: AnimatedSprite2D = $Explosion
 
+# Signal to notify when deactivation is complete
+signal firing_completed
+
 var _is_active: bool
 var _last_collision_point: Vector2 = Vector2.ZERO
 var _is_exploding: bool = false
@@ -128,6 +131,7 @@ func deactivate():
 func _on_animation_player_animation_finished(anim_name:StringName) -> void:
 	if anim_name == "stop_beam":
 		visible = false
+		emit_signal("firing_completed")
 
 func _on_animation_player_glow_animation_finished(anim_name:StringName) -> void:
 	if anim_name == "stop_glow":

@@ -18,13 +18,14 @@ var marginY: int = 12
 @onready var cooldownTimer : Timer = $Orbs/CooldownTimer
 @onready var vinebow = $SpecialPivot/Vinebow
 
+enum WeaponState {IDLE, FIRING_LASER, FIRING_THORNS, FIRING_VINES}
+var current_weapon_state = WeaponState.IDLE
 
 # Track which orbs need regeneration
 var orb1_needs_regen = false
 var orb2_needs_regen = false
 var orb3_needs_regen = false
 var is_regenerating = false
-var is_firing = false  # Track if we're currently in the firing process
 
 func _ready():
 	orbsTimer.paused = true
@@ -37,38 +38,43 @@ func _ready():
 	cooldownTimer.wait_time = cooldown_time
 	cooldownTimer.one_shot = true
 	
+	# Connect vinebow signals
+	vinebow.firing_completed.connect(_on_vinebow_firing_completed)
+	
+	# Connect laser signals
+	laser.firing_completed.connect(_on_laser_firing_completed)
 	
 func _process(delta: float):
-	if Input.is_action_pressed("fire") and not is_firing and not is_regenerating:
+	if Input.is_action_pressed("fire") and current_weapon_state == WeaponState.IDLE and not is_regenerating:
 		_process_orbs()
-	if Input.is_action_pressed("special") and not is_firing:
+	if Input.is_action_pressed("special") and current_weapon_state == WeaponState.IDLE:
 		_shoot_thorns()
-	if Input.is_action_pressed("middle") and not is_firing:
+	if Input.is_action_pressed("middle") and current_weapon_state == WeaponState.IDLE:
 		_shoot_vines()
 
 func _shoot_vines():
-	is_firing = true		
+	current_weapon_state = WeaponState.FIRING_VINES		
 	special_pivot.global_position = global_position
 	vinebow.shoot_vines()
-	is_firing = false
+	# State will be reset by signal handler
 
 func _shoot_thorns():
-	is_firing = true
+	current_weapon_state = WeaponState.FIRING_THORNS
 	attack_pivot.global_position = global_position
 	vinebow.shoot_thorns()
-	is_firing = false
+	# State will be reset by signal handler
 
 func _process_orbs():
-	if !orb1._is_disabled && orbsTimer.paused:
+	if !orb1._is_disabled && current_weapon_state == WeaponState.IDLE:
 		shoot_laser(orb1)
-	elif !orb2._is_disabled && orbsTimer.paused:
+	elif !orb2._is_disabled && current_weapon_state == WeaponState.IDLE:
 		shoot_laser(orb2)
-	elif !orb3._is_disabled && orbsTimer.paused:
+	elif !orb3._is_disabled && current_weapon_state == WeaponState.IDLE:
 		shoot_laser(orb3)
 
 
 func shoot_laser(orb):
-	is_firing = true
+	current_weapon_state = WeaponState.FIRING_LASER
 	attack_pivot.global_position = orb.global_position
 	orbsTimer.paused = false
 	orbsTimer.start(0.2)
@@ -90,7 +96,7 @@ func shoot_laser(orb):
 	await orbsTimer.timeout
 	laser.deactivate()
 	orbsTimer.paused = true
-	is_firing = false  # Allow firing the next orb if available
+	# State will be reset by signal handler
 
 
 func _on_cooldown_timer_timeout():
@@ -170,3 +176,11 @@ func clamp_to_visible_area():
 	# Clamp the character position
 	global_position.x = clamp(global_position.x, left_edge + marginX, right_edge - marginX)
 	global_position.y = clamp(global_position.y, top_edge + marginY, bottom_edge - marginY)
+
+func _on_vinebow_firing_completed():
+	# Reset the weapon state when vinebow firing is complete
+	current_weapon_state = WeaponState.IDLE
+	
+func _on_laser_firing_completed():
+	# Reset the weapon state when laser firing is complete
+	current_weapon_state = WeaponState.IDLE

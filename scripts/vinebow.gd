@@ -17,12 +17,15 @@ var is_active = false  # Track if projectile is currently active
 var is_firing = false  # Track if we're in the firing sequence
 var active_thorns = []  # Track all active thorn instances
 var active_vines = []  # Track all active vine instances
+
+# Signals to notify character when firing is complete
+signal firing_completed
+
 func _ready() -> void:
 	bow_ap.visible = false
 
 func _process(delta: float) -> void:
 	pass
-
 
 func shoot_vines():
 	if is_firing:
@@ -97,6 +100,7 @@ func shoot_vines():
 	await get_tree().create_timer(vine_distance / projectile_speed + 0.3).timeout
 	bow_ap.visible = false
 	is_firing = false
+	emit_signal("firing_completed")
 
 func shoot_thorns():
 	if is_firing:
@@ -172,6 +176,7 @@ func shoot_thorns():
 	await get_tree().create_timer(thorn_distance / projectile_speed + 0.3).timeout
 	bow_ap.visible = false
 	is_firing = false
+	emit_signal("firing_completed")
 
 # Called when an individual vine completes its movement
 func _on_vine_movement_complete(vine_instance):
