@@ -70,7 +70,7 @@ func shoot_vines():
 		# Connect collision signals
 		if vine_area:
 			vine_area.area_entered.connect(
-				func(area): _handle_collision(area, vine_instance, damage)
+				func(area): _handle_area_collision(area, vine_instance, damage)
 			)
 			vine_area.body_entered.connect(
 				func(body): _handle_body_collision(body, vine_instance, damage)
@@ -143,7 +143,7 @@ func shoot_thorns():
 		# Connect collision signals
 		if projectile_area:
 			projectile_area.area_entered.connect(
-				func(area): _handle_collision(area, thorn_instance, damage)
+				func(area): _handle_area_collision(area, thorn_instance, damage)
 			)
 			projectile_area.body_entered.connect(
 				func(body): _handle_body_collision(body, thorn_instance, damage)
@@ -202,7 +202,7 @@ func _on_thorn_movement_complete(thorn_instance):
 			active_thorns.erase(thorn_instance)
 
 # Handle collision with areas
-func _handle_collision(area: Area2D, thorn_instance: Node2D, damage_amount: float) -> void:
+func _handle_area_collision(area: Area2D, thorn_instance: Node2D, damage_amount: float) -> void:
 	if !is_active or !is_instance_valid(thorn_instance):
 		return
 		
@@ -221,3 +221,33 @@ func _handle_body_collision(body: Node2D, thorn_instance: Node2D, damage_amount:
 	# Check if we hit an enemy directly
 	if body.has_method("hurt"):
 		body.hurt(damage_amount)
+
+	# Check the object type before accessing collision properties
+	if body.get_class() == "TileMapLayer" or body.get_class() == "TileMap":
+		destroy_projectile(thorn_instance)
+		return
+	
+	# Check if we hit a wall (more comprehensive checks)
+	if body is StaticBody2D:
+		destroy_projectile(thorn_instance)
+	elif "collision_layer" in body and (body.collision_layer & 1):  # Check if bit 0 is set (layer 1)
+		destroy_projectile(thorn_instance)
+
+# Helper function to convert integer to binary string
+func _int_to_binary(value):
+	var binary = ""
+	for i in range(20):  # Show up to 20 bits
+		if value & (1 << i):
+			binary = "1" + binary
+		else:
+			binary = "0" + binary
+	return binary
+
+# Helper to destroy a projectile
+func destroy_projectile(projectile):
+	if projectile in active_thorns:
+		projectile.queue_free()
+		active_thorns.erase(projectile)
+	elif projectile in active_vines:
+		projectile.queue_free()
+		active_vines.erase(projectile)

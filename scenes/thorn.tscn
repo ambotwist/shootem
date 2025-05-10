@@ -51,6 +51,8 @@ sprite_frames = SubResource("SpriteFrames_rphs4")
 animation = &"thorn_end"
 
 [node name="Area2D" type="Area2D" parent="ProjectileAS"]
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="ProjectileAS/Area2D"]
 polygon = PackedVector2Array(-7, 4, 8, 0, 8, -1, -7, -6)
