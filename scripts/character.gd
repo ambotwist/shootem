@@ -152,7 +152,7 @@ func _physics_process(delta: float) -> void:
 		velocity.y = move_toward(velocity.y, 0, SPEED)
 
 	move_and_slide()
-	clamp_to_visible_area()
+	# clamp_to_visible_area()
 
 	# Pivots
 	attack_pivot.look_at(get_global_mouse_position())

@@ -10,7 +10,9 @@ const CHUNK_HEIGHT = 7 * 16  # 7 tiles * 16 pixels per tile
 
 # References
 @export_node_path var chunk_queue_path
+@export_node_path var mob_spawner_path
 var chunk_queue
+var mob_spawner
 
 # Bottom chunk groups
 var bottom_chunks = ["Z1_D0", "Z1_D1"]
@@ -58,6 +60,16 @@ func _ready() -> void:
 		else:
 			push_error("No chunk queue found! Make sure to assign chunk_queue_path or add a ChunkQueue node as a sibling.")
 			return
+	
+	# Get reference to the mob spawner
+	if mob_spawner_path:
+		mob_spawner = get_node(mob_spawner_path)
+	else:
+		# Try to find it in the parent
+		var parent = get_parent()
+		var potential_spawner = parent.get_node_or_null("MobSpawner")
+		if potential_spawner:
+			mob_spawner = potential_spawner
 			
 	# Identify and organize available chunk parts
 	_find_chunk_parts()
@@ -195,6 +207,10 @@ func spawn_next_chunk() -> void:
 	
 	# Add to queue
 	chunk_queue.add_chunk(new_chunk)
+	
+	# Spawn enemies on this chunk if we have a mob spawner
+	if mob_spawner:
+		mob_spawner.spawn_enemies_on_chunk(new_chunk)
 
 # Determine the type of top chunk to create next based on connection rules
 func determine_next_top_chunk():

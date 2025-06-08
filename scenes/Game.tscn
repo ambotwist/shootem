@@ -10,4 +10,5 @@ bottom_position = Vector2(444, 151)
 level_path = NodePath("Level_0")
 
 [node name="Level_0" parent="." instance=ExtResource("2_qbsmt")]
+max_scroll_speed = 150.0
 enable_speed_increase = false

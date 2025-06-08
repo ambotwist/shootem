@@ -63,7 +63,7 @@ func _process(delta: float) -> void:
 			camera.global_position.x = scroll_position.x
 		
 		# Check if player has fallen too far behind
-		if player and player.global_position.x < scroll_position.x - 160:  # Half the chunk width
+		if player and player.global_position.x < scroll_position.x - 280:  # Half the chunk width
 			_on_player_left_behind()
 		
 		# Check if we need to generate new chunks or remove old ones
