@@ -82,6 +82,11 @@ func start_level() -> void:
 
 func stop_level() -> void:
 	is_scrolling = false
+	
+	# Clean up all enemies when stopping the level
+	var mob_spawner = get_node_or_null("../MobSpawner")
+	if mob_spawner and mob_spawner.has_method("clean_up_all_enemies"):
+		mob_spawner.clean_up_all_enemies()
 
 func _on_chunk_passed() -> void:
 	# This is called when a chunk is completely passed and removed
@@ -92,6 +97,12 @@ func _on_player_left_behind() -> void:
 	# Handle when player falls behind the scroll
 	# This usually means game over
 	stop_level()
+	
+	# Clean up all enemies immediately on game over
+	var mob_spawner = get_node_or_null("../MobSpawner")
+	if mob_spawner and mob_spawner.has_method("clean_up_all_enemies"):
+		mob_spawner.clean_up_all_enemies()
+	
 	# Emit a signal or call a game over function
 	print("Player left behind - game over!")
 	

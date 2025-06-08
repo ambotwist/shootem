@@ -34,5 +34,5 @@ tile_map_data = PackedByteArray("AAD7/wsABwAbAAsAAAD8/wsABwAcAAsAAAD9/wsABwAdAAs
 tile_set = ExtResource("5_ppgk2")
 
 [node name="MobSpawner" parent="." instance=ExtResource("6_klq6b")]
-spawn_probability = 0.1
+spawn_probability = 0.15
 chunk_queue_path = NodePath("../ChunkQueue")

@@ -5,7 +5,7 @@ var active_chunks = []
 # Width of each chunk in pixels
 @export var chunk_width: int = 320  # 20 tiles × 16 pixels
 # How many chunks to keep active at once
-@export var keep_chunks: int = 3
+@export var keep_chunks: int = 5
 # Signal when a chunk has been completely passed
 signal chunk_passed
 
@@ -33,7 +33,7 @@ func check_for_new_chunks(camera_position: Vector2) -> bool:
 	
 	# If camera is getting close to the end of the last chunk, request a new one
 	# Let's say within 1.5 chunks of the end
-	var threshold = last_chunk_end_x - (chunk_width * 1.5)
+	var threshold = last_chunk_end_x - (chunk_width * 2.5)
 	return camera_position.x > threshold
 	
 # Check if the oldest chunk is now off-screen and can be removed
