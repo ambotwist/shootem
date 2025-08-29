@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cr70g5o25q6cu"
-valid=false
+uid="uid://bxxavi37t8hpw"
+path="res://.godot/imported/runes.png-ac816319190055bcbe70f960a4f1f2b5.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://assets/sprites/character/hero_idle+hit-Sheet-Sheet.aseprite"
+source_file="res://assets/sprites/world/runes.png"
+dest_files=["res://.godot/imported/runes.png-ac816319190055bcbe70f960a4f1f2b5.ctex"]
 
 [params]
 

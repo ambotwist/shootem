@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://h5oy82ton5uq"]
+
+[ext_resource type="Script" uid="uid://bmwt5k43k71x3" path="res://scripts/mob_spawner.gd" id="1_ljl1v"]
+[ext_resource type="PackedScene" uid="uid://bbby28m4631k7" path="res://scenes/hoodeye.tscn" id="2_m10af"]
+
+[node name="MobSpawner" type="Node2D"]
+script = ExtResource("1_ljl1v")
+enemy_scenes = Array[PackedScene]([ExtResource("2_m10af")])
